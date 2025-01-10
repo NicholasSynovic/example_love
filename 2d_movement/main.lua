@@ -1,9 +1,14 @@
 function love.load()
     -- Loads data at the beginning of the game
-    Player = {} -- Set player to an empty table
+    local wf = require 'windfield'
+    World = wf.newWorld()
+
+    Player= {} -- Set player to an empty table
     Player.x = 200  -- Player x coordinate
     Player.y = 200  -- Player y coordinate
     Player.speed = 10   -- Speed of the player
+
+    Character = World:newRectangleCollider(Player.x, Player.y, 50, 50)
 end
 
 function love.update(dt)
@@ -28,10 +33,13 @@ function love.update(dt)
         -- Move down
         Player.y = Player.y + Player.speed
     end
+
+    World:update(dt)
 end
 
 function love.draw()
     -- Draws objects
-    love.graphics.circle("line", Player.x, Player.y, 100)
+    -- love.graphics.circle("line", Player.x, Player.y, 100)
     -- Draw a circle outline to player coordinates
+    World:draw()
 end
