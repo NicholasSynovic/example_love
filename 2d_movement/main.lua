@@ -1,52 +1,56 @@
 function love.load()
-	-- Loads data at the beginning of the game
-	local wf = require("windfield")
-	World = wf.newWorld(0, 500)
+    _ = love.window.setMode(640, 480)
 
-	Player = {} -- Set player to an empty table
-	Player.x = 200 -- Player x coordinate
-	Player.y = 200 -- Player y coordinate
-	Player.speed = 10 -- Speed of the player
-	Player.inAir = false
+    local wf = require("windfield")
+    World = wf.newWorld(0, 500)
+    World:addCollisionClass("Platform")
 
-	Platform = {}
-	Platform.length = 200
-	Platform.width = 100
+    Player = {} -- Set player to an empty table
+    Player.x = 80 -- Player x coordinate
+    Player.y = 350 -- Player y coordinate
+    Player.speed = 10 -- Speed of the player
+    Player.inAir = true -- Check to see if the charachter is jumping
 
-	Character = World:newRectangleCollider(Player.x, Player.y, 50, 50)
-	Left_Platform = World:newRectangleCollider(100, 400, Platform.length, Platform.width)
-	Right_Platform = World:newRectangleCollider(400, 400, Platform.length, Platform.width)
+    Platform = {}
+    Platform.length = 100
+    Platform.width = 25
 
-	Left_Platform:setType("static")
-	Right_Platform:setType("static")
-end
+    Character = World:newRectangleCollider(Player.x, Player.y, 50, 50)
+    Left_Platform =
+        World:newRectangleCollider(40, 400, Platform.length, Platform.width)
+    Right_Platform =
+        World:newRectangleCollider(500, 400, Platform.length, Platform.width)
 
-function love.keypressed(key)
-	if key == "w" then
-		Character:applyLinearImpulse(0, -1500)
-	end
+    Left_Platform:setType("static")
+    Left_Platform:setCollisionClass("Platform")
+    Right_Platform:setType("static")
+    Right_Platform:setCollisionClass("Platform")
 end
 
 function love.update(dt)
-	-- Updates every frame (put game logic here)
-	-- dt = delta time (time between frame updates)
+    if Character:enter("Platform") then
+        Player.inAir = false
+    end
 
-	if love.keyboard.isDown("d") then
-		-- Move to the right
-		Character:applyForce(-1000, 0)
-	end
+    if Character:exit("Platform") then
+        Player.inAir = true
+    end
 
-	if love.keyboard.isDown("a") then
-		-- Move to the left
-		Character:applyForce(1000, 0)
-	end
+    if love.keyboard.isDown("w") and Player.inAir == false then
+        Character:applyLinearImpulse(0, -1500)
+    end
 
-	World:update(dt)
+    if love.keyboard.isDown("d") then
+        Character:applyForce(1000, 0)
+    end
+
+    if love.keyboard.isDown("a") then
+        Character:applyForce(-1000, 0)
+    end
+
+    World:update(dt)
 end
 
 function love.draw()
-	-- Draws objects
-	-- love.graphics.circle("line", Player.x, Player.y, 100)
-	-- Draw a circle outline to player coordinates
-	World:draw()
+    World:draw()
 end
