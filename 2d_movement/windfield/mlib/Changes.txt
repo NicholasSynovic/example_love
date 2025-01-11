@@ -4,7 +4,7 @@ Added:
 ----
 - mlib.vec2 component
 
-To-Do: 
+To-Do:
 ----
 - Update README.md
 - Update spec.lua
