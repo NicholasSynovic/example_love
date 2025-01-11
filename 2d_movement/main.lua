@@ -1,7 +1,9 @@
 function love.load()
-    _ = love.window.setMode(640, 480)
-
+    local config = require("config")
     local wf = require("windfield")
+
+    config.SetWindowSize(640, 480)
+
     World = wf.newWorld(0, 500)
     World:addCollisionClass("Platform")
 
